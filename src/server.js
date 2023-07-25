@@ -23,7 +23,7 @@ app.put('/api/posts/:name/like', (req, res) => {
     const post = postsInfo.find(p => p.name === name);
     if(post) {
         post.likes += 1
-        res.send(`The ${name} post now has ${ post.likes} likes.`)
+        res.send(`The ${name} post now has ${ post.likes} likes!!!`)
     } else {
         res.send(`The post ${name} does not exist!`)
     }
