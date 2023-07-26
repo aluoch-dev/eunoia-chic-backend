@@ -24,9 +24,19 @@ app.get('/api/posts/:name', async (req, res) => {
 });
 
 
-app.put('/api/posts/:name/like', (req, res) => {
+app.put('/api/posts/:name/like', async (req, res) => {
     const { name } = req.params;
-    const post = postsInfo.find(p => p.name === name);
+
+    const client = new MongoClient("mongodb://127.0.0.1:27017");
+    await client.connect();
+
+    const db = client.db('eunoia-chic-db');
+    await db.collection('posts').updateOne({ name }, {
+        $inc: { likes: 1 }
+    });
+
+    const post = await db.collection('posts').findOne({ name });
+    
     if(post) {
         post.likes += 1
         res.send(`The ${name} post now has ${ post.likes} likes!!!`)
