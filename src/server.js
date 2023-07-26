@@ -1,16 +1,11 @@
 import express from "express";
-import { MongoClient } from "mongodb";
+import { db, connectToDb }  from './db.js'
 
 const app = express();
 app.use(express.json());
 
 app.get('/api/posts/:name', async(req, res) => {
     const { name } = req.params;
-
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
-    await client.connect();
-
-    const db = client.db('eunoia-chic-db')
 
     const post = await db.collection('posts').findOne({name});
 
@@ -25,10 +20,6 @@ app.get('/api/posts/:name', async(req, res) => {
 app.put('/api/posts/:name/like', async(req, res) => {
     const { name } = req.params;
 
-    const client = new MongoClient("mongodb://127.0.0.1:27017");
-    await client.connect();
-
-    const db = client.db('eunoia-chic-db');
     await db.collection('posts').updateOne({ name }, {
         $inc: { likes: 1 }
     });
@@ -46,16 +37,11 @@ app.post('/api/posts/:name/comments', async(req, res) => {
     const { name } = req.params;
     const { postedBy, commentText } = req.body;
 
-    const client = new MongoClient('mongodb://127.0.0.1:27017');
-    await client.connect();
-
-    const db = client.db('eunoia-chic-db')
     await db.collection('posts').updateOne({ name }, {
         $push: { comments: { postedBy, commentText }}
     });
 
     const post = await db.collection('posts').findOne({ name });
-
 
     if(post) {
         res.send(post.comments);
@@ -65,7 +51,9 @@ app.post('/api/posts/:name/comments', async(req, res) => {
 }
 );
 
-
-app.listen(8000, () => {
-    console.log('Server listening on port 8000');
-})
+connectToDb(() => {
+    console.log("Successfully connected to db")
+    app.listen(8000, () => {
+        console.log('Server listening on port 8000');
+    })
+});
