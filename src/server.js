@@ -14,7 +14,13 @@ app.get('/api/posts/:name', async (req, res) => {
 
     const post = await db.collection('posts').findOne({name});
 
-    res.json(post);
+    if(post) {
+        res.json(post);
+    } else {
+        res.sendStatus(404);
+    }
+
+    
 });
 
 
@@ -26,7 +32,7 @@ app.put('/api/posts/:name/like', (req, res) => {
         res.send(`The ${name} post now has ${ post.likes} likes!!!`)
     } else {
         res.send(`The post ${name} does not exist!`)
-    }
+    } 
 });
 
 app.post('/api/posts/:name/comments', (req, res) => {
