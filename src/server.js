@@ -19,8 +19,6 @@ app.get('/api/posts/:name', async (req, res) => {
     } else {
         res.sendStatus(404);
     }
-
-    
 });
 
 
@@ -38,7 +36,6 @@ app.put('/api/posts/:name/like', async (req, res) => {
     const post = await db.collection('posts').findOne({ name });
     
     if(post) {
-        post.likes += 1
         res.send(`The ${name} post now has ${ post.likes} likes!!!`)
     } else {
         res.send(`The post ${name} does not exist!`)
@@ -57,7 +54,6 @@ app.post('/api/posts/:name/comments', (req, res) => {
     } else {
         res.send(`The post ${name} does not exist!`)
     }
-   
 }
 );
 
