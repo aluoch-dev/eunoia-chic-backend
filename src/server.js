@@ -1,8 +1,11 @@
 import express from "express";
 import { db, connectToDb }  from './db.js'
 
+const express = require('express');
+const cors = require('cors');
+
 const app = express();
-app.use(express.json());
+app.use(cors(), express.json());
 
 app.get('/api/posts/:name', async(req, res) => {
     const { name } = req.params;
