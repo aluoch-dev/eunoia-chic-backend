@@ -4,7 +4,7 @@ import { MongoClient } from "mongodb";
 const app = express();
 app.use(express.json());
 
-app.get('/api/posts/:name', (req, res) => {
+app.get('/api/posts/:name', async (req, res) => {
     const { name } = req.params;
 
     const client = new MongoClient('mongodb://127.0.0.1:27017');
@@ -14,7 +14,7 @@ app.get('/api/posts/:name', (req, res) => {
 
     const post = await db.collection('posts').findOne({name});
 
-    res.send(post);
+    res.json(post);
 });
 
 
